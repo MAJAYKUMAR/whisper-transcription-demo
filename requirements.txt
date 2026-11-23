@@ -1,0 +1,4 @@
+faster-whisper>=1.0
+# faster-whisper 1.2.1 calls av.open(..., metadata_errors="ignore"),
+# which PyAV 19 removed; cap av below 19 until faster-whisper catches up.
+av>=11,<19

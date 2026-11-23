@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Downloaded Whisper model weights (faster-whisper caches these in
+# ~/.cache/huggingface by default, so they are not in this repo anyway)
+# Audio samples are fetched on demand by scripts/get_sample.py;
+# do not commit large audio files.
+samples/*.wav
+samples/*.mp3
+samples/*.flac
+samples/*.ogg
+!samples/.gitkeep
