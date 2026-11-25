@@ -10,6 +10,7 @@ Usage:
 """
 
 import argparse
+import os
 import sys
 
 from . import config
@@ -64,6 +65,12 @@ def print_result(segments, info):
 
 def main(argv=None):
     args = parse_args(argv)
+
+    # Fail fast: a missing file should not wait for the model to download
+    # and load before erroring out.
+    if not os.path.exists(args.audio):
+        print(f"Error: audio file not found: {args.audio}", file=sys.stderr)
+        return 2
 
     transcriber = Transcriber(
         args.model, args.device, config.DEFAULT_COMPUTE_TYPE

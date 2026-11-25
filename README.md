@@ -44,6 +44,15 @@ python -m transcribe my-audio.mp3 --model base --language en
 
 `python transcribe.py ...` still works too — it is a thin shim that hands off to the package.
 
+## Tests
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest
+```
+
+The suite runs with no model download and no faster-whisper install: it covers argument defaults, timestamp formatting, printed output, and the missing-audio check — a missing file exits before the model is loaded.
+
 ## Example output
 
 Example output from running the demo on the sample above with `--model tiny` (the tiny model mishears a word here and there — try `--model base` for a cleaner transcript):
@@ -82,6 +91,8 @@ Audio duration: 33.6s
 | `transcribe/` | The demo, in three small modules: `cli.py` (arguments + output), `service.py` (the faster-whisper wrapper), `config.py` (defaults) |
 | `transcribe.py` | Thin shim so `python transcribe.py ...` still works |
 | `requirements.txt` | `faster-whisper` (+ a PyAV version cap, see note above) |
+| `requirements-dev.txt` | Test-only dependencies (`pytest`) |
+| `tests/` | pytest suite — runs with no model and no faster-whisper install |
 | `scripts/get_sample.py` | Downloads the sample audio into `samples/` |
 | `samples/` | Empty by default; the sample lands here when you fetch it |
 
