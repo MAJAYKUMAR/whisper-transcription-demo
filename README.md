@@ -10,6 +10,7 @@ A tiny command-line demo: give it one audio file, and it prints the transcript w
 - Transcribes a single audio file (wav, mp3, flac, ...)
 - Prints each segment as `[start --> end]  text`, followed by per-word timings
 - Auto-detects the spoken language unless you pass `--language`
+- Saves the transcript as JSON or SRT subtitles with `--output json|srt`
 
 ## Install
 
@@ -43,6 +44,27 @@ python -m transcribe my-audio.mp3 --model base --language en
 ```
 
 `python transcribe.py ...` still works too — it is a thin shim that hands off to the package.
+
+### Save the transcript
+
+```bash
+python -m transcribe samples/OSR_us_000_0010_8k.wav --output srt
+python -m transcribe my-audio.mp3 --output json
+```
+
+This writes the transcript next to the audio file (`samples/OSR_us_000_0010_8k.srt`, `my-audio.json`) instead of printing it. The SRT file has one numbered block per segment:
+
+```
+1
+00:00:00,000 --> 00:00:03,780
+The birch can use lid on the smooth planks.
+
+2
+00:00:04,600 --> 00:00:06,600
+Glue the sheet to the dark blue background.
+```
+
+The JSON file holds the detected language, duration, and every segment with its word timings.
 
 ## Tests
 
@@ -88,7 +110,7 @@ Audio duration: 33.6s
 
 | File | What it is |
 | --- | --- |
-| `transcribe/` | The demo, in three small modules: `cli.py` (arguments + output), `service.py` (the faster-whisper wrapper), `config.py` (defaults) |
+| `transcribe/` | The demo, in four small modules: `cli.py` (arguments + output), `service.py` (the faster-whisper wrapper), `config.py` (defaults), `output.py` (JSON/SRT writers) |
 | `transcribe.py` | Thin shim so `python transcribe.py ...` still works |
 | `requirements.txt` | `faster-whisper` (+ a PyAV version cap, see note above) |
 | `requirements-dev.txt` | Test-only dependencies (`pytest`) |

@@ -7,6 +7,7 @@ segment with start/end timestamps plus word-level timings.
 Usage:
     python -m transcribe samples/OSR_us_000_0010_8k.wav
     python -m transcribe my-audio.mp3 --model base --language en
+    python -m transcribe my-audio.mp3 --output srt
 """
 
 import argparse
@@ -14,6 +15,7 @@ import os
 import sys
 
 from . import config
+from .output import write_json, write_srt
 from .service import Transcriber
 
 
@@ -36,6 +38,13 @@ def parse_args(argv=None):
         "--device",
         default=config.DEFAULT_DEVICE,
         help='Device to run on: "cpu" or "cuda" (default: cpu)',
+    )
+    parser.add_argument(
+        "--output",
+        default="text",
+        choices=["text", "json", "srt"],
+        help='Transcript output: "text" (default, print to terminal), '
+        '"json", or "srt" (saved next to the audio file)',
     )
     return parser.parse_args(argv)
 
@@ -92,7 +101,16 @@ def main(argv=None):
         language=args.language,
         word_timestamps=config.WORD_TIMESTAMPS,
     )
-    print_result(segments, info)
+    if args.output == "text":
+        print_result(segments, info)
+    elif args.output == "json":
+        out_path = os.path.splitext(args.audio)[0] + ".json"
+        write_json(segments, info, out_path)
+        print(f"Wrote transcript to {out_path}")
+    else:
+        out_path = os.path.splitext(args.audio)[0] + ".srt"
+        write_srt(segments, out_path)
+        print(f"Wrote transcript to {out_path}")
     return 0
 
 
